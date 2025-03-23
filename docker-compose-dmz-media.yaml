@@ -1,0 +1,151 @@
+services:
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    depends_on: 
+      - "sabnzbd"
+      - "wireguard"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      PUID: 1000
+      GUID: 1000
+      TZ: Etc/UTC
+    volumes:
+      - ./temp-data/sonarr-config:/config
+      - "${TV_SHOW_PATH}:/tv"
+      - ${DOWNLOAD_PATH}:/downloads
+      - ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
+    networks:
+      vpnnet-internal:
+        ipv4_address: 10.10.20.6
+  sabnzbd:
+    image: linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    depends_on:
+      - "wireguard"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+    volumes:
+      - ./temp-data/sabnzbd-config:/config
+      - ${DOWNLOAD_PATH}:/downloads
+      - ${TEMP_DOWNLOAD_PATH}:/incomplete-downloads
+      - ${NZB_WATCH_PATH}:/watch-folder
+      - ./dmz-services/media/custom-scripts/connect-network-sabnzbd.sh:/custom-cont-init.d/connect-network-sabnzbd.sh:ro
+    networks:
+      vpnnet-internal:
+        ipv4_address: 10.10.20.3
+  # tdarr:
+  #   image: haveagitgat/tdarr:2.35.02
+  #   container_name: tdarr
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - wireguard
+  #   cap_add:
+  #     - NET_ADMIN
+  #   environment:
+  #     PUID: 1000
+  #     PGID: 1000
+  #     TZ: Etc/UTC
+  #     serverIP: 0.0.0.0
+  #     serverPort: 8266
+  #     webUIPort: 8265
+  #     UMASK_SET: 002
+  #     internalNode: true
+  #     inContainer: true
+  #     nodeName: ServerNode
+  #   volumes:
+  #     - ./temp-data/tdarr-config:/app/configs
+  #     - ./temp-data/tdarr-logs:/app/logs
+  #     - ./temp-data/tdarr-server:/app/server
+  #     - "${TV_SHOW_PATH}:/media"
+
+
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+    networks:
+      vpnnet:
+        ipv4_address: 10.10.10.2
+      vpnnet-internal:
+        ipv4_address: 10.10.20.2
+    volumes:
+      - ./temp-data/wireguard-config:/config/wg_confs/
+      - /lib/modules:/lib/modules
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+  swag:
+    image: linuxserver/swag:latest
+    container_name: swag
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: "America/Toronto"
+      URL: ${DOMAIN}
+      VALIDATION: dns
+      SUBDOMAINS: wildcard
+      ONLY_SUBDOMAINS: true
+      STAGING: true
+      DNSPLUGIN: cloudflare
+    secrets:
+     - source: cloudfare_config
+       target: /config/dns-conf/cloudflare.ini
+    networks: 
+      vpnnet:
+        ipv4_address: 10.10.10.5
+      vpnnet-internal:
+        ipv4_address: 10.10.20.5
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./temp-data/swag-config:/config
+      - ./reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
+      - ./reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
+  dns:
+    image: internetsystemsconsortium/bind9:9.20
+    container_name: dns
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./dmz-services/media/custom-scripts/connect-network-dns.sh:/tmp/connect-network-dns.sh:ro
+      - ./dmz-services/media/bind9-config.conf:/etc/bind/named.conf:ro
+    networks: 
+      vpnnet-internal:
+        ipv4_address: 10.10.20.4
+    entrypoint: ["sh", "-c", "/tmp/connect-network-dns.sh"]
+secrets:
+  cloudfare_config:
+    file: ./secrets/cloudflare.ini
+networks:
+  vpnnet:
+    name: vpnnet
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+          gateway: 10.10.10.1
+  vpnnet-internal:
+    name: vpnnet-internal
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.10.20.0/24
+          gateway: 10.10.20.1

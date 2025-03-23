@@ -1,0 +1,5 @@
+# Ignore all the device specific temp-data, which might include secrets!
+temp-data/*
+secrets/*
+.env
+!secrets/*.template
