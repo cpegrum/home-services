@@ -76,7 +76,7 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
 * enter ./usenet-setup/sabnzbd-config/ and edit the  sabnzbd.ini file with the following
 
     ```
-    host_whitelist = sabnzbd.poppythedog.ca,sabnzbd # Comma seperate different entries
+    host_whitelist = sabnzbd.<your domain>,sabnzbd # Comma seperate different entries
     ```
 
 * restart containers with docker compose
