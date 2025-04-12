@@ -8,6 +8,8 @@ services:
       - "wireguard"
     cap_add:
       - NET_ADMIN
+    ports:
+      - "8989:8989"
     environment:
       PUID: 1000
       GUID: 1000
@@ -18,8 +20,8 @@ services:
       - ${DOWNLOAD_PATH}:/downloads
       - ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
     networks:
-      vpnnet-internal:
-        ipv4_address: 10.10.20.6
+      vpnnet:
+        ipv4_address: 10.10.10.6
   sabnzbd:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -41,31 +43,35 @@ services:
     networks:
       vpnnet-internal:
         ipv4_address: 10.10.20.3
-  # tdarr:
-  #   image: haveagitgat/tdarr:2.35.02
-  #   container_name: tdarr
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - wireguard
-  #   cap_add:
-  #     - NET_ADMIN
-  #   environment:
-  #     PUID: 1000
-  #     PGID: 1000
-  #     TZ: Etc/UTC
-  #     serverIP: 0.0.0.0
-  #     serverPort: 8266
-  #     webUIPort: 8265
-  #     UMASK_SET: 002
-  #     internalNode: true
-  #     inContainer: true
-  #     nodeName: ServerNode
-  #   volumes:
-  #     - ./temp-data/tdarr-config:/app/configs
-  #     - ./temp-data/tdarr-logs:/app/logs
-  #     - ./temp-data/tdarr-server:/app/server
-  #     - "${TV_SHOW_PATH}:/media"
-
+  tdarr:
+    image: haveagitgat/tdarr:2.35.02
+    container_name: tdarr
+    restart: unless-stopped
+    depends_on:
+      - wireguard
+    cap_add:
+      - NET_ADMIN
+    cpus: 2
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+      serverIP: 0.0.0.0
+      serverPort: 8266
+      webUIPort: 8265
+      UMASK_SET: 002
+      internalNode: true
+      inContainer: true
+      nodeName: ServerNode
+    volumes:
+      - ./temp-data/tdarr-config:/app/configs
+      - ./temp-data/tdarr-logs:/app/logs
+      - ./temp-data/tdarr-server:/app/server
+      - "${TV_SHOW_PATH}:/media"
+      - "${TRANSCODE_PATH}:/temp"
+    networks:
+      vpnnet-internal:
+        ipv4_address: 10.10.20.7
 
   wireguard:
     image: linuxserver/wireguard:latest
@@ -102,7 +108,7 @@ services:
       VALIDATION: dns
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
-      STAGING: true
+      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
      - source: cloudfare_config
@@ -119,6 +125,7 @@ services:
       - ./temp-data/swag-config:/config
       - ./reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
       - ./reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
+      - ./reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
   dns:
     image: internetsystemsconsortium/bind9:9.20
     container_name: dns
