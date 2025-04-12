@@ -8,8 +8,6 @@ services:
       - "wireguard"
     cap_add:
       - NET_ADMIN
-    ports:
-      - "8989:8989"
     environment:
       PUID: 1000
       GUID: 1000
@@ -18,10 +16,10 @@ services:
       - ./temp-data/sonarr-config:/config
       - "${TV_SHOW_PATH}:/tv"
       - ${DOWNLOAD_PATH}:/downloads
-      - ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
+      #- ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
     networks:
-      vpnnet:
-        ipv4_address: 10.10.10.6
+      vpnnet-internal:
+        ipv4_address: 10.10.20.6
   sabnzbd:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -108,6 +106,7 @@ services:
       VALIDATION: dns
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
+      DISABLE_F2B: true
       STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
@@ -125,7 +124,7 @@ services:
       - ./temp-data/swag-config:/config
       - ./reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
       - ./reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
-      - ./reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
+      - ./reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/tdarr.subdomain.conf
   dns:
     image: internetsystemsconsortium/bind9:9.20
     container_name: dns
