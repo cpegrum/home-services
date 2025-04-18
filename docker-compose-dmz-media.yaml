@@ -16,7 +16,7 @@ services:
       - ./temp-data/sonarr-config:/config
       - "${TV_SHOW_PATH}:/tv"
       - ${DOWNLOAD_PATH}:/downloads
-      #- ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
+      - ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
     networks:
       vpnnet-internal:
         ipv4_address: 10.10.20.6
@@ -68,8 +68,8 @@ services:
       - "${TV_SHOW_PATH}:/media"
       - "${TRANSCODE_PATH}:/temp"
     networks:
-      vpnnet-internal:
-        ipv4_address: 10.10.20.7
+      vpnnet:
+        ipv4_address: 10.10.10.7
 
   wireguard:
     image: linuxserver/wireguard:latest

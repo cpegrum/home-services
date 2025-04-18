@@ -16,7 +16,9 @@ Usenet based downloader with the following containers:
     * It is connected to both the `vpnnet` which has internet access and `vpnnet-internal` which has no internet access. `vpnnet` is needed to get new certs from letsencrypt etc.
 * bind9: This container is a DNS resolver and provides DNS support to the Sabnzbd container. Because the Sabnzbd container is located on an isolated network,
     it has no external network access. the Bind9 container provides DNS to the Sabnzbd container, which can then connect out to the internet via the wireguard container.
-    * It is connected to the `vpnnet-internal` network. DNS requests are forwarded via the wireguard VPN container to public DNS servers. It is used by the sabnzbd and 
+    * It is connected to the `vpnnet-internal` network. DNS requests are forwarded via the wireguard VPN container to public DNS servers. It is used by the sabnzbd and Sonarr.
+* tdarr: This container reformats video files to reduce space used and remove unwanted audio tracks etc.
+    * It is connected to `vpnnet` network so that it can download plugins etc.
 
 ### Networks
 * `vpnnet`: `10.10.10.0/24` -> Internet enabled network 
@@ -142,5 +144,20 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
     * Select tv and wait for it to scan, then import all
     * Go to Series and wait for it to detect any missing shows etc
     * For those with missing episodes, you can ask it to go grab them via Sabnzbd using the question mark button
+* Tdarr setup
+    * Go to `Tdarr.<your domains>.ca`
+    * Go to Flow -> Add Flow
+    * Add the following flow: [tdarr flow](./tdarr/tdarr-flow.json)
+    * Go to Libraries Add a new one called "TV"
+        * Source -> `/media`
+        * Next tab: "Trancode Cache". Set to `/temp`
+        * Output Folder: Leave default
+        * Filters, leave as default except 'Filters at trancode queue level" add the following for resolutions: `480p,576p,720p`
+        * Transcode Options: Select "Flows" and select the one added earlier "CPU HEVC"
+        * Health Check: Default (Quick)
+        * Leave Schedule and Variables as default
+        * Start the scan of the files: Options -> Scan (Fresh)
+    * On the home page select ServerNode -> Add one Transcode and one health check Workers for CPU
+    * Lower down in Options, select Prioritise Health Check
 
 

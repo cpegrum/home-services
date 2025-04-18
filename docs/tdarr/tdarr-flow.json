@@ -1,0 +1,216 @@
+{
+    "_id": "FQxdumLCg",
+    "name": "CPU HEVC",
+    "description": "CPU HEVC",
+    "tags": "",
+    "flowPlugins": [
+      {
+        "name": "Replace Original File",
+        "sourceRepo": "Community",
+        "pluginName": "replaceOriginalFile",
+        "version": "1.0.0",
+        "id": "Ue8bSqJIe",
+        "position": {
+          "x": 1061.6159717408336,
+          "y": -150.1306254764931
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Input File",
+        "sourceRepo": "Community",
+        "pluginName": "inputFile",
+        "version": "1.0.0",
+        "id": "-Y3PO0lKV",
+        "position": {
+          "x": 1131.5275159163798,
+          "y": -674.4709684675718
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Order MKV Streams",
+        "sourceRepo": "Community",
+        "pluginName": "runClassicTranscodePlugin",
+        "version": "1.0.0",
+        "inputsDB": {
+          "pluginSourceId": "Community:Tdarr_Plugin_00td_action_re_order_all_streams_v2",
+          "streamTypes": "video,audio,subtile",
+          "processOrder": "channels,languages,streamTypes",
+          "codecs": "",
+          "languages": "eng,jpn,fre"
+        },
+        "id": "1qtpkmYov",
+        "position": {
+          "x": 1132.4119578226475,
+          "y": -464.63418398235893
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Transcode to H265",
+        "sourceRepo": "Community",
+        "pluginName": "runClassicTranscodePlugin",
+        "version": "1.0.0",
+        "inputsDB": {
+          "pluginSourceId": "Community:Tdarr_Plugin_MC93_Migz1FFMPEG_CPU",
+          "bitrate_cutoff": "5000"
+        },
+        "id": "n1F9o5ErB",
+        "position": {
+          "x": 1133.2894800238391,
+          "y": -534.8511701745388
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Image Removal",
+        "sourceRepo": "Community",
+        "pluginName": "runClassicTranscodePlugin",
+        "version": "1.0.0",
+        "inputsDB": {
+          "pluginSourceId": "Community:Tdarr_Plugin_MC93_MigzImageRemoval"
+        },
+        "id": "7xgO22kO4",
+        "position": {
+          "x": 1131.756702702997,
+          "y": -607.9522987409075
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Remove PGS Subtitles",
+        "sourceRepo": "Community",
+        "pluginName": "runClassicTranscodePlugin",
+        "version": "2.0.0",
+        "id": "FWVrhdQSm",
+        "position": {
+          "x": 1142.830878674198,
+          "y": -393.1857309594977
+        },
+        "fpEnabled": true,
+        "inputsDB": {
+          "pluginSourceId": "Community:Tdarr_Plugin_MP01_MichPasCleanSubsAndAudioCodecs",
+          "tag_subtitle_codecs": "hdmv_pgs_subtitle"
+        }
+      },
+      {
+        "name": "Compare File Size Ratio",
+        "sourceRepo": "Community",
+        "pluginName": "compareFileSizeRatio",
+        "version": "2.0.0",
+        "id": "MGWwIJmEI",
+        "position": {
+          "x": 1155.318350831765,
+          "y": -221.40555799438312
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Fail Flow",
+        "sourceRepo": "Community",
+        "pluginName": "failFlow",
+        "version": "1.0.0",
+        "id": "g8NitmctX",
+        "position": {
+          "x": 1451.8320047102204,
+          "y": -119.03704473316945
+        },
+        "fpEnabled": true
+      },
+      {
+        "name": "Reorder Audio",
+        "sourceRepo": "Community",
+        "pluginName": "runClassicTranscodePlugin",
+        "version": "2.0.0",
+        "id": "cHtfOloMh",
+        "position": {
+          "x": 1145.9719167654603,
+          "y": -304.51855790989606
+        },
+        "fpEnabled": true,
+        "inputsDB": {
+          "pluginSourceId": "Community:Tdarr_Plugin_076a_re_order_audio_streams"
+        }
+      }
+    ],
+    "flowEdges": [
+      {
+        "source": "-Y3PO0lKV",
+        "sourceHandle": "1",
+        "target": "7xgO22kO4",
+        "targetHandle": null,
+        "id": "hwf4ADgux"
+      },
+      {
+        "source": "7xgO22kO4",
+        "sourceHandle": "1",
+        "target": "n1F9o5ErB",
+        "targetHandle": null,
+        "id": "2e-Flgs0O"
+      },
+      {
+        "source": "n1F9o5ErB",
+        "sourceHandle": "1",
+        "target": "1qtpkmYov",
+        "targetHandle": null,
+        "id": "rgBqAZuoV"
+      },
+      {
+        "source": "1qtpkmYov",
+        "sourceHandle": "1",
+        "target": "FWVrhdQSm",
+        "targetHandle": null,
+        "id": "rNdTO7TEw"
+      },
+      {
+        "source": "MGWwIJmEI",
+        "sourceHandle": "1",
+        "target": "Ue8bSqJIe",
+        "targetHandle": null,
+        "id": "F4mFetl_1"
+      },
+      {
+        "source": "MGWwIJmEI",
+        "sourceHandle": "2",
+        "target": "g8NitmctX",
+        "targetHandle": null,
+        "id": "9ZrCovO6L"
+      },
+      {
+        "source": "MGWwIJmEI",
+        "sourceHandle": "3",
+        "target": "g8NitmctX",
+        "targetHandle": null,
+        "id": "8koMW6RQa"
+      },
+      {
+        "source": "FWVrhdQSm",
+        "sourceHandle": "1",
+        "target": "cHtfOloMh",
+        "targetHandle": null,
+        "id": "otuktvxMF"
+      },
+      {
+        "source": "FWVrhdQSm",
+        "sourceHandle": "2",
+        "target": "cHtfOloMh",
+        "targetHandle": null,
+        "id": "FEpZ3iaDO"
+      },
+      {
+        "source": "cHtfOloMh",
+        "sourceHandle": "1",
+        "target": "MGWwIJmEI",
+        "targetHandle": null,
+        "id": "TTUf8y24c"
+      },
+      {
+        "source": "cHtfOloMh",
+        "sourceHandle": "2",
+        "target": "MGWwIJmEI",
+        "targetHandle": null,
+        "id": "H_DO7EWnV"
+      }
+    ]
+  }
