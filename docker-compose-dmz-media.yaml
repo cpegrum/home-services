@@ -107,7 +107,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
      - source: cloudfare_config

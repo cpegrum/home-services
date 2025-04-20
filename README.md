@@ -2,6 +2,7 @@
 This Repo contains my home server docker setup and currently has the following services:
 
 * Usenet Downloader via Sabnzbd with Sonarr with SWAG reverse proxy
+* Tdarr setup for trancoding via CPU with SWAG reverse proxy
 
 
 ## General Setup
@@ -14,6 +15,7 @@ This setup is done via the `docker-compose-dmz-media.yaml` file located in the r
 * Sabnzbd: Media Downloader from Usenet
 * Sonarr: TV Show organizer and will download missing edpisodes via Sabnzbd
 * SWAG: reverse proxy which will allow access to the Sonarr and Sanbzbd web UIs via `sonarr.<your domain>` and `sabnzbd.<your domain>` subdomains.
+* Tdarr: Transcode Media with CPU
 * wireguard: VPN to forward all traffic coming from Sonarr and Sabnzbd
 * bind9: povides DNS for Sabnzbd and Sonarr containers.
 

@@ -1,0 +1,68 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    environment:
+      OLLAMA_KEEP_ALIVE: 3600  # Keep each model in memory for 1 hour after use before unload
+    volumes:
+      - ./temp-data/ollama-server:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      ainet:
+        ipv4_address: 10.10.30.2
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+    volumes:
+      - ./temp-data/open-webui-server:/app/backend/data
+    networks:
+      ainet:
+        ipv4_address: 10.10.30.3
+  swag:
+    image: linuxserver/swag:latest
+    container_name: swag
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: "America/Toronto"
+      URL: ${DOMAIN}
+      VALIDATION: dns
+      SUBDOMAINS: wildcard
+      ONLY_SUBDOMAINS: true
+      DISABLE_F2B: true
+      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      DNSPLUGIN: cloudflare
+    secrets:
+     - source: cloudfare_config
+       target: /config/dns-conf/cloudflare.ini
+    networks: 
+      ainet:
+        ipv4_address: 10.10.30.4
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./temp-data/swag-ai-config:/config
+      - ./reverse-proxy/open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+networks:
+  ainet:
+    name: ainet
+    ipam:
+      config:
+        - subnet: 10.10.30.0/24
+          gateway: 10.10.30.1
