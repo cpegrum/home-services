@@ -25,6 +25,7 @@ services:
       - ollama
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_URL: "https://ai.${DOMAIN}"
     volumes:
       - ./temp-data/open-webui-server:/app/backend/data
     networks:

@@ -1,5 +1,5 @@
-# intro
-This git repo will contain all the Configuration as Code used to setup all my home server
+# Intro
+This git repo will contain all the Configuration as Code used to setup my home media server
 
 # Services
 ## Media Downloader
