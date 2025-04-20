@@ -59,6 +59,9 @@ services:
     volumes:
       - ./temp-data/swag-ai-config:/config
       - ./reverse-proxy/open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+secrets:
+  cloudfare_config:
+    file: ./secrets/cloudflare.ini
 networks:
   ainet:
     name: ainet
