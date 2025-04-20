@@ -3,6 +3,7 @@ This Repo contains my home server docker setup and currently has the following s
 
 * Usenet Downloader via Sabnzbd with Sonarr with SWAG reverse proxy
 * Tdarr setup for trancoding via CPU with SWAG reverse proxy
+* Ollama and Open WebUI AI server with SWAG reverse proxy
 
 
 ## General Setup
@@ -20,3 +21,11 @@ This setup is done via the `docker-compose-dmz-media.yaml` file located in the r
 * bind9: povides DNS for Sabnzbd and Sonarr containers.
 
 To see more information on how to set this up check out the documentation [here](./docs/dmz-media-downloader.md)
+
+### AI Server
+This setup is done via the `docker-compose-dmz-ai.yaml` file located in the root of this repo. It contains the following containers:
+
+* Ollama: This container hosts and runs the AI models.
+* Open-Webui: This container hosts the Web frontend that allows for easy use of the AI models run by Ollama.
+* swag: This reverse proxy provides SSL certs for the Open-Webui frontend.
+
