@@ -14,7 +14,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
       DOCKER_MODS: linuxserver/mods:swag-crowdsec
       CROWDSEC_LAPI_URL: http://crowdsec:8080
@@ -32,10 +32,10 @@ services:
     volumes:
       - logs:/config/log/nginx
       - ./temp-data/swag-waf-proxy-config:/config
-      - ./reverse-proxy/waf-proxy-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
-      - ./reverse-proxy/waf-proxy-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+      - ./reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
+      - ./reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
   crowdsec:
-      image: crowdsecurity/crowdsec:v1.6.4
+      image: crowdsecurity/crowdsec:v1.6.8
       container_name: crowdsec
       restart: unless-stopped
       depends_on:
@@ -56,11 +56,11 @@ services:
         - ./temp-data/crowdsec-config:/var/lib/crowdsec/data:rw
         - logs:/var/log/swag:ro
         - ./proxy-services/crowdsec/acquis.d:/etc/crowdsec/acquis.d
-  volumes:
-    logs:
-  secrets:
-    cloudfare_config:
-      file: ./secrets/cloudflare.ini
+volumes:
+  logs:
+secrets:
+  cloudfare_config:
+    file: ./secrets/cloudflare.ini
 networks:
   proxynet:
     name: proxynet
