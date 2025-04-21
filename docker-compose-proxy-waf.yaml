@@ -1,0 +1,70 @@
+services:
+  swag:
+    image: linuxserver/swag:latest
+    container_name: swag
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: "America/Toronto"
+      URL: ${DOMAIN}
+      VALIDATION: dns
+      SUBDOMAINS: wildcard
+      ONLY_SUBDOMAINS: true
+      DISABLE_F2B: true
+      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      DNSPLUGIN: cloudflare
+      DOCKER_MODS: linuxserver/mods:swag-crowdsec
+      CROWDSEC_LAPI_URL: http://crowdsec:8080
+      CROWDSEC_APPSEC_URL: http://crowdsec:7422
+      CROWDSEC_API_KEY: ${CROWDSEC_API_KEY}
+    secrets:
+     - source: cloudfare_config
+       target: /config/dns-conf/cloudflare.ini
+    networks:
+      proxynet:
+        ipv4_address: 10.10.40.2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - logs:/config/log/nginx
+      - ./temp-data/swag-waf-proxy-config:/config
+      - ./reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
+      - ./reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+  crowdsec:
+      image: crowdsecurity/crowdsec:v1.6.8
+      container_name: crowdsec
+      restart: unless-stopped
+      depends_on:
+        - 'swag'
+      security_opt:
+        - no-new-privileges=true
+      environment:
+        COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+        DISABLE_SCENARIOS: "crowdsecurity/http-crawl-non_statics"
+        DISABLE_PARSERS: "crowdsecurity/whitelists"
+        LISTEN_URI: 0.0.0.0:8080
+        GID: 1000
+        BOUNCER_KEY_SWAG: ${CROWDSEC_API_KEY}
+      networks:
+        proxynet:
+          ipv4_address: 10.10.40.3
+      volumes:
+        - ./temp-data/crowdsec-config:/var/lib/crowdsec/data:rw
+        - logs:/var/log/swag:ro
+        - ./proxy-services/crowdsec/acquis.d:/etc/crowdsec/acquis.d
+volumes:
+  logs:
+secrets:
+  cloudfare_config:
+    file: ./secrets/cloudflare.ini
+networks:
+  proxynet:
+    name: proxynet
+    ipam:
+      config:
+        - subnet: 10.10.40.0/24
+          gateway: 10.10.40.1

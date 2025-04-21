@@ -5,7 +5,7 @@ This git repo will contain all the Configuration as Code used to setup my home m
 ## Media Downloader
 Usenet based downloader with the following containers:
 ### Container
- This setup contains 5 different containers
+ This setup contains 6 different containers:
  * Sabnzbd: This container hosts the Sabnzbd server which does the downloading of the files from usenet.
    * It it connected to the `vpnnet-internal` network, which does not have external network (internet) access.
 * Sonarr: This container hosts the Sonarr server which monitors for new TV show eposides and downloades them via the Sabnzbd container.
