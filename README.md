@@ -4,6 +4,7 @@ This Repo contains my home server docker setup and currently has the following s
 * Usenet Downloader via Sabnzbd with Sonarr with SWAG reverse proxy
 * Tdarr setup for trancoding via CPU with SWAG reverse proxy
 * Ollama and Open WebUI AI server with SWAG reverse proxy
+* Crowdsec + Swag reverse proxy
 
 
 ## General Setup
@@ -28,4 +29,10 @@ This setup is done via the `docker-compose-dmz-ai.yaml` file located in the root
 * Ollama: This container hosts and runs the AI models.
 * Open-Webui: This container hosts the Web frontend that allows for easy use of the AI models run by Ollama.
 * swag: This reverse proxy provides SSL certs for the Open-Webui frontend.
+
+### Crowdsec + Swag
+This setup is done via the `docker-compose-proxy-waf.yaml` file located in the root of this repo. it container the following containers:
+
+* Crowdsec: WAF engine that detects and protects a Swag instance.
+* Swag: A Reverse Proxy to provides SSL certification as well as asks Crowdsec if it should block access to applications.
 
