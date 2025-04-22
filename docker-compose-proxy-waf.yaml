@@ -14,7 +14,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
       DOCKER_MODS: linuxserver/mods:swag-crowdsec
       CROWDSEC_LAPI_URL: http://crowdsec:8080

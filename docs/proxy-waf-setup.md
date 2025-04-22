@@ -13,6 +13,10 @@ This setup uses the following containers:
 ### Setup
 * Generate a random crowdsec API key using: `openssl rand -base64 24` Add this key to the `.env` file. (If this file doesn't exist in the root directory, copy the `.env.template` to `.env`)
 
+* Make sure the `DOMAIN` variable in the `.env` file is filled with your domain.
+
+* Make sure the `cloudflare.ini` file in `./secrets/` has the cloudflare API key to be able to get a SSL cert
+
 * Edit the reverse-proxy confs in `./reverse-proxy` for:
     * `proxy-waf-open-webui.subdomain.conf`
     * `proxy-waf-plex.subdomain.conf`
