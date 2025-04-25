@@ -34,3 +34,5 @@ Testing works best when run from another computer (not the same one it is deploy
 * You should now see a blocked page, enter the container to check the blocked status:
     * `docker exec -it crowdsec bash` then `cscli decisions list`, you should now see a blocked decision.
     * Use the following command to unblock it: `cscli decisions delete --id <ID number from list cmd>`
+
+* Optional: If you would like to see your crowdsec agent on the web dashboard you can enrol it with your account at `app.crowdsec.net` by using `cscli console enroll -e context <your token from the site>`
