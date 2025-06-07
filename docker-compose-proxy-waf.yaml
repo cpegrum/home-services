@@ -60,7 +60,7 @@ volumes:
   logs:
 secrets:
   cloudfare_config:
-    file: ./secrets/cloudflare.ini
+    file: ./secrets/reverse-proxy-secrets/cloudflare.ini
 networks:
   proxynet:
     name: proxynet
