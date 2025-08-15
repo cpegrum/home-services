@@ -4,6 +4,7 @@ This git repo contains the docker files required to setup a CROWDSEC protected S
 # Services
 ## CROWDSEC WAF + SWAG
 This setup uses the following containers:
+### Containers
 * crowdsec: This container runs the crowdsec engine which makes decisions on which users to block based in IP, traffic etc
 * swag: This container hows the swag proxy. It also hosts the crowdsec bouncer which based on the decisions of the crowdsec engine will block access etc. This bouncer also feeds user request info to the crowdsec engine for decisions etc.
 

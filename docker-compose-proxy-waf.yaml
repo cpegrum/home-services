@@ -32,8 +32,8 @@ services:
     volumes:
       - logs:/config/log/nginx
       - ./temp-data/swag-waf-proxy-config:/config
-      - ./reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
-      - ./reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+      - ./services/reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
+      - ./services/reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
   crowdsec:
       image: crowdsecurity/crowdsec:v1.6.8
       container_name: crowdsec
@@ -55,12 +55,12 @@ services:
       volumes:
         - ./temp-data/crowdsec-config:/var/lib/crowdsec/data:rw
         - logs:/var/log/swag:ro
-        - ./proxy-services/crowdsec/acquis.d:/etc/crowdsec/acquis.d
+        - ./services/proxy-services/crowdsec/acquis.d:/etc/crowdsec/acquis.d
 volumes:
   logs:
 secrets:
   cloudfare_config:
-    file: ./secrets/cloudflare.ini
+    file: ./secrets/reverse-proxy-secrets/cloudflare.ini
 networks:
   proxynet:
     name: proxynet

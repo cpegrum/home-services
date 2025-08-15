@@ -4,7 +4,7 @@ This git repo will contain all the Configuration as Code used to setup my home m
 # Services
 ## Media Downloader
 Usenet based downloader with the following containers:
-### Container
+### Containers
  This setup contains 6 different containers:
  * Sabnzbd: This container hosts the Sabnzbd server which does the downloading of the files from usenet.
    * It it connected to the `vpnnet-internal` network, which does not have external network (internet) access.
@@ -28,6 +28,8 @@ Usenet based downloader with the following containers:
 * Install docker and mount the plex-store-main
 
 `sudo mount -t cifs -o user=usenet,gid=1000,uid=1000 //<Share domain> /mnt/<SMB-share-name>/`
+
+* On the SMB share side, disabling SMB oplock can be helpful if you notice issues turning on and off the sonarr container (ex: it hangs)
 
 * pull the required containers:
 

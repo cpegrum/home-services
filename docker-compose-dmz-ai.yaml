@@ -59,10 +59,10 @@ services:
       - "443:443"
     volumes:
       - ./temp-data/swag-ai-config:/config
-      - ./reverse-proxy/open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
+      - ./services/reverse-proxy/open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
 secrets:
   cloudfare_config:
-    file: ./secrets/cloudflare.ini
+    file: ./secrets/reverse-proxy-secrets/cloudflare.ini
 networks:
   ainet:
     name: ainet

@@ -1,0 +1,69 @@
+services:
+  akaunting:
+    image: akaunting/akaunting:latest
+    container_name: akaunting
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - swag
+    env_file:
+      - ./secrets/bookkeeping-secrets/run.env
+    volumes:
+      - akaunting-data:/var/www/html
+      - ./services/bookkeeping-services/php.ini:/usr/local/etc/php/php.ini:ro
+    networks:
+      akauntingnet:
+        ipv4_address: 10.10.50.2
+  mariadb:
+    image: mariadb:latest
+    container_name: maraidb
+    restart: unless-stopped
+    env_file:
+      - ./secrets/bookkeeping-secrets/db.env
+    volumes:
+      - akaunting-db:/var/lib/mysql
+    networks:
+      akauntingnet:
+        ipv4_address: 10.10.50.3
+  swag:
+    image: linuxserver/swag:latest
+    container_name: swag
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: "America/Toronto"
+      URL: ${DOMAIN}
+      VALIDATION: dns
+      SUBDOMAINS: wildcard
+      ONLY_SUBDOMAINS: true
+      DISABLE_F2B: true
+      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      DNSPLUGIN: cloudflare
+    secrets:
+     - source: cloudfare_config
+       target: /config/dns-conf/cloudflare.ini
+    networks: 
+      akauntingnet:
+        ipv4_address: 10.10.50.4
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./temp-data/swag-akaunting-config:/config
+      - ./services/reverse-proxy/akaunting.subdomain.conf:/config/nginx/proxy-confs/akaunting.subdomain.conf
+secrets:
+  cloudfare_config:
+    file: ./secrets/reverse-proxy-secrets/cloudflare.ini
+volumes:
+  akaunting-data:
+  akaunting-db:
+networks:
+  akauntingnet:
+    name: akauntingnet
+    ipam:
+      config:
+        - subnet: 10.10.50.0/24
+          gateway: 10.10.50.1

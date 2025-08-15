@@ -6,8 +6,6 @@ services:
     depends_on: 
       - "sabnzbd"
       - "wireguard"
-    cap_add:
-      - NET_ADMIN
     environment:
       PUID: 1000
       GUID: 1000
@@ -16,18 +14,21 @@ services:
       - ./temp-data/sonarr-config:/config
       - "${TV_SHOW_PATH}:/tv"
       - ${DOWNLOAD_PATH}:/downloads
-      - ./dmz-services/media/custom-scripts/connect-network-sonarr.sh:/custom-cont-init.d/connect-network-sonarr.sh:ro
     networks:
       vpnnet-internal:
         ipv4_address: 10.10.20.6
+    dns:
+      - 10.10.20.4  # bind DNS container
+    post_start:  # This command runs after the container has started and routes the traffic via the VPN container
+      - command: /bin/sh -c "ip route add default via 10.10.20.2"
+        user: root
+        privileged: true
   sabnzbd:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
     restart: unless-stopped
     depends_on:
       - "wireguard"
-    cap_add:
-      - NET_ADMIN
     environment:
       PUID: 1000
       PGID: 1000
@@ -37,18 +38,21 @@ services:
       - ${DOWNLOAD_PATH}:/downloads
       - ${TEMP_DOWNLOAD_PATH}:/incomplete-downloads
       - ${NZB_WATCH_PATH}:/watch-folder
-      - ./dmz-services/media/custom-scripts/connect-network-sabnzbd.sh:/custom-cont-init.d/connect-network-sabnzbd.sh:ro
     networks:
       vpnnet-internal:
         ipv4_address: 10.10.20.3
+    dns:
+      - 10.10.20.4  # bind DNS container
+    post_start:  # This command runs after the container has started and routes the traffic via the VPN container
+      - command: /bin/sh -c "ip route add default via 10.10.20.2"
+        user: root
+        privileged: true
   tdarr:
     image: haveagitgat/tdarr:2.35.02
     container_name: tdarr
     restart: unless-stopped
     depends_on:
       - wireguard
-    cap_add:
-      - NET_ADMIN
     cpus: 2
     environment:
       PUID: 1000
@@ -70,7 +74,8 @@ services:
     networks:
       vpnnet:
         ipv4_address: 10.10.10.7
-
+    dns:
+      - 10.10.20.4  # bind DNS container
   wireguard:
     image: linuxserver/wireguard:latest
     container_name: wireguard
@@ -122,9 +127,9 @@ services:
       - "443:443"
     volumes:
       - ./temp-data/swag-config:/config
-      - ./reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
-      - ./reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
-      - ./reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/tdarr.subdomain.conf
+      - ./services/reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
+      - ./services/reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
+      - ./services/reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/tdarr.subdomain.conf
   dns:
     image: internetsystemsconsortium/bind9:9.20
     container_name: dns
@@ -132,15 +137,15 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./dmz-services/media/custom-scripts/connect-network-dns.sh:/tmp/connect-network-dns.sh:ro
-      - ./dmz-services/media/bind9-config.conf:/etc/bind/named.conf:ro
+      - ./services/dmz-services/media/custom-scripts/connect-network-dns.sh:/tmp/connect-network-dns.sh:ro
+      - ./services/dmz-services/media/bind9-config.conf:/etc/bind/named.conf:ro
     networks: 
       vpnnet-internal:
         ipv4_address: 10.10.20.4
     entrypoint: ["sh", "-c", "/tmp/connect-network-dns.sh"]
 secrets:
   cloudfare_config:
-    file: ./secrets/cloudflare.ini
+    file: ./secrets/reverse-proxy-secrets/cloudflare.ini
 networks:
   vpnnet:
     name: vpnnet

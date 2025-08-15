@@ -4,7 +4,7 @@ This git repo will contain all the Configuration as Code used to setup my home A
 # Services
 ## AI Server
 Ollama Server with Open-Webui frontend.
-### Container
+### Containers
 This setup contains 3 different containers:
 * Ollama: This container hosts and runs the AI models. It is connected to the `ainet` network.
 * Open-Webui: This container hosts the Web frontend that allows for easy use of the AI models run by Ollama. It is connected to the `ainet` network.
