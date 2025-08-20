@@ -48,7 +48,7 @@ services:
         user: root
         privileged: true
   tdarr:
-    image: haveagitgat/tdarr:2.35.02
+    image: haveagitgat/tdarr:2.37.01
     container_name: tdarr
     restart: unless-stopped
     depends_on:
@@ -94,7 +94,6 @@ services:
         ipv4_address: 10.10.20.2
     volumes:
       - ./temp-data/wireguard-config:/config/wg_confs/
-      - /lib/modules:/lib/modules
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
   swag:
@@ -112,7 +111,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
      - source: cloudfare_config
