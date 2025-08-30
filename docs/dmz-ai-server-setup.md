@@ -50,4 +50,16 @@
     * Update and install: `sudo apt-get update` and `sudo apt-get install -y nvidia-container-toolkit`
 
 * Tell Docker to use nvidia: `nvidia-ctk runtime configure --runtime=docker`
+
+* Configure the following settings for the docker deamon to fix this issue: [ollama github](https://github.com/ollama/ollama/blob/main/docs/troubleshooting.md#linux-docker)
+
+```
+# Edit /etc/docker/daemon.json and add the following
+
+{
+  "exec-opts": ["native.cgroupdriver=cgroupfs"]
+}
+
+```
+
 * restart docker: `sudo systemctl restart docker`
