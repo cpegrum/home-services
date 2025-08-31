@@ -4,7 +4,10 @@ services:
     container_name: ollama
     restart: unless-stopped
     environment:
-      OLLAMA_KEEP_ALIVE: 3600  # Keep each model in memory for 1 hour after use before unload
+      OLLAMA_KEEP_ALIVE: 7200  # Keep each model in memory for 1 hour after use before unload
+      OLLAMA_CONTEXT_LENGTH: 16384  # Context length at 16k
+      OLLAMA_FLASH_ATTENTION: 1
+      OLLAMA_KV_CACHE_TYPE: q8_0
     volumes:
       - ./temp-data/ollama-server:/root/.ollama
     deploy:
