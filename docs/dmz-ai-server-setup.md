@@ -38,6 +38,11 @@
     * Reboot: `reboot now`
     * Check drivers: `nvidia-smi`
     * List all gpus: `lspci | grep -i vga`
+* Driver updates can be done via:
+    * List drivers: `ubuntu-drivers devices`
+    * Install recommended: `   sudo apt install nvidia-driver-575`
+    * Reboot: `reboot now`
+    * Check drivers: `nvidia-smi`
 
 * Install Nvidia Container runtime: see https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installation for more details
     * Configure repo:
@@ -63,3 +68,21 @@
 ```
 
 * restart docker: `sudo systemctl restart docker`
+
+* Settings GPU power limits
+    * Check current power limits: `nvidia-smi -q -d POWER`
+    * Set Power limit to 300 W per GPU (will apply to all GPUs): `nvidia-smi -pl 300`
+    * Note changes aren't persistance, can add a systemd service to do it.
+       * Add the following systemd service: `/etc/systemd/system/nvidia-power-limit.service`
+        ```
+          [Unit]
+          Description=Set NVIDIA GPU Power Limit
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/bin/nvidia-smi -pl 370
+
+          [Install]
+          WantedBy=multi-user.target
+        ```
+        * Enable: `systemctl enable nvidia-power-limit.service`
