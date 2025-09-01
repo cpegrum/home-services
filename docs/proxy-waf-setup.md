@@ -18,7 +18,7 @@ This setup uses the following containers:
 
 * Make sure the `cloudflare.ini` file in `./secrets/` has the cloudflare API key to be able to get a SSL cert
 
-* Edit the reverse-proxy confs in `./reverse-proxy` for:
+* Edit the reverse-proxy confs in `./services/reverse-proxy` for:
     * `proxy-waf-open-webui.subdomain.conf`
     * `proxy-waf-plex.subdomain.conf`
 * For each of the above files, edit the `upstream_app` variable to point to the IP of your open webui and plex server.

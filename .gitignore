@@ -2,4 +2,4 @@
 temp-data/*
 secrets/*
 .env
-!secrets/*.template
+!secrets/**/*.template
