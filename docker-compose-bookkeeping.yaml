@@ -22,6 +22,7 @@ services:
       - ./secrets/bookkeeping-secrets/db.env
     volumes:
       - akaunting-db:/var/lib/mysql
+      - ./services/bookkeeping-secrets/maria.cnf:/etc/mysql/conf.d/maria.cnf:ro
     networks:
       akauntingnet:
         ipv4_address: 10.10.50.3

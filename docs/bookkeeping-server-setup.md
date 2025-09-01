@@ -45,12 +45,12 @@ The Akaunting setup and be backed up by backing up the two docker volumes: `akau
 
 * This command will generate a tarred file backup of the `akaunting-data` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-data:/backup -v $(pwd):/host alpine:latest tar -czf /host/akaunting-data-backup-$(date +"%Y-%m-%d-%H%M").tar.gz /backup
+docker run -it --rm -v home-services_akaunting-data:/backup -v $(pwd):/host alpine:latest tar -C /backup -czf /host/akaunting-data-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
 
 * This command will generate a tarred file backup of the `akaunting-db` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-db:/backup -v $(pwd):/host alpine:latest tar -czf /host/akaunting-db-backup-$(date +"%Y-%m-%d-%H%M").tar.gz /backup
+docker run -it --rm -v home-services_akaunting-db:/backup -v $(pwd):/host alpine:latest tar -C /backup -czf /host/akaunting-db-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
 
 ### Restoring
