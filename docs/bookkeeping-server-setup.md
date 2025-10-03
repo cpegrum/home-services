@@ -2,7 +2,7 @@
 This git repo will contain all the Configuration as Code used to setup the self hosted akunting (bookkeeping/accounting software) server
 
 # Services
-## AI Server
+## Bookkeeping Server
 Akaunting server
 ### Containers
 This setup contains 3 different containers:
