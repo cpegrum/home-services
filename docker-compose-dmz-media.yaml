@@ -48,7 +48,7 @@ services:
         user: root
         privileged: true
   tdarr:
-    image: haveagitgat/tdarr:2.37.01
+    image: haveagitgat/tdarr:2.47.01
     container_name: tdarr
     restart: unless-stopped
     depends_on:
