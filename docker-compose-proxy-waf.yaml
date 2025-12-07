@@ -35,7 +35,7 @@ services:
       - ./services/reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
       - ./services/reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
   crowdsec:
-      image: crowdsecurity/crowdsec:v1.7.0
+      image: crowdsecurity/crowdsec:v1.7.4
       container_name: crowdsec
       restart: unless-stopped
       depends_on:
