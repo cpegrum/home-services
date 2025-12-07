@@ -35,7 +35,7 @@ services:
       - ./services/reverse-proxy/proxy-waf-plex.subdomain.conf:/config/nginx/proxy-confs/plex.subdomain.conf
       - ./services/reverse-proxy/proxy-waf-open-webui.subdomain.conf:/config/nginx/proxy-confs/open-webui.subdomain.conf
   crowdsec:
-      image: crowdsecurity/crowdsec:v1.7.0
+      image: crowdsecurity/crowdsec:v1.7.4
       container_name: crowdsec
       restart: unless-stopped
       depends_on:
@@ -43,7 +43,7 @@ services:
       security_opt:
         - no-new-privileges=true
       environment:
-        COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs"
+        COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
         DISABLE_SCENARIOS: "crowdsecurity/http-crawl-non_statics"
         DISABLE_PARSERS: "crowdsecurity/whitelists"
         LISTEN_URI: 0.0.0.0:8080
