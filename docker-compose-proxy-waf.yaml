@@ -43,7 +43,7 @@ services:
       security_opt:
         - no-new-privileges=true
       environment:
-        COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+        COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs"
         DISABLE_SCENARIOS: "crowdsecurity/http-crawl-non_statics"
         DISABLE_PARSERS: "crowdsecurity/whitelists"
         LISTEN_URI: 0.0.0.0:8080
