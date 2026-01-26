@@ -48,7 +48,7 @@ services:
         user: root
         privileged: true
   tdarr:
-    image: haveagitgat/tdarr:2.47.01
+    image: haveagitgat/tdarr:2.48.02
     container_name: tdarr
     restart: unless-stopped
     depends_on:
@@ -70,6 +70,7 @@ services:
       - ./temp-data/tdarr-logs:/app/logs
       - ./temp-data/tdarr-server:/app/server
       - "${TV_SHOW_PATH}:/media"
+      - "${MOVIES_PATH}:/media_movies"
       - "${TRANSCODE_PATH}:/temp"
     networks:
       vpnnet:
