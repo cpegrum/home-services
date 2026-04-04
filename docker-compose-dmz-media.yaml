@@ -23,6 +23,27 @@ services:
       - command: /bin/sh -c "ip route add default via 10.10.20.2"
         user: root
         privileged: true
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+    volumes:
+      - ./temp-data/radarr-config:/config
+      - ${MOVIES_PATH}:/movies 
+      - ${DOWNLOAD_PATH}:/downloads
+    networks:
+      vpnnet-internal:
+        ipv4_address: 10.10.20.7
+    dns:
+      - 10.10.20.4  # bind DNS container
+    post_start:  # This command runs after the container has started and routes the traffic via the VPN container
+      - command: /bin/sh -c "ip route add default via 10.10.20.2"
+        user: root
+        privileged: true
   sabnzbd:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -48,7 +69,7 @@ services:
         user: root
         privileged: true
   tdarr:
-    image: haveagitgat/tdarr:2.48.02
+    image: haveagitgat/tdarr:2.67.01
     container_name: tdarr
     restart: unless-stopped
     depends_on:
@@ -70,7 +91,7 @@ services:
       - ./temp-data/tdarr-logs:/app/logs
       - ./temp-data/tdarr-server:/app/server
       - "${TV_SHOW_PATH}:/media"
-      - "${MOVIES_PATH}:/media_movies"
+      - "${MOVIES_PATH}:/media-movies"
       - "${TRANSCODE_PATH}:/temp"
     networks:
       vpnnet:
@@ -130,6 +151,7 @@ services:
       - ./services/reverse-proxy/sabnzbd.subdomain.conf:/config/nginx/proxy-confs/sabnzbd.subdomain.conf
       - ./services/reverse-proxy/sonarr.subdomain.conf:/config/nginx/proxy-confs/sonarr.subdomain.conf
       - ./services/reverse-proxy/tdarr.subdomain.conf:/config/nginx/proxy-confs/tdarr.subdomain.conf
+      - ./services/reverse-proxy/radarr.subdomain.conf:/config/nginx/proxy-confs/radarr.subdomain.conf
   dns:
     image: internetsystemsconsortium/bind9:9.20
     container_name: dns
