@@ -41,6 +41,7 @@ Usenet based downloader with the following containers:
   * linuxserver/sonarr:latest
   * linuxserver/radarr:latest
   * internetsystemsconsortium/bind9:9.20
+  * haveagitgat/tdarr:2.67.01
 
 * go to mullvad and download a wireguard config: https://mullvad.net/en/account/wireguard-config
 
@@ -158,7 +159,7 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
     * Configure Media Management
         * Go to Settings -> Media Management
         * Click Show Advanced (top Left)
-        * Enable Rename Episodes
+        * Enable Rename Movies
         * Using https://trash-guides.info/Radarr/Radarr-recommended-naming-scheme
         * Use the Standard format: `{Movie CleanTitle} {(Release Year)} - {{Edition Tags}} {[MediaInfo 3D]}{[Custom Formats]}{[Quality Full]}{[Mediainfo AudioCodec}{ Mediainfo AudioChannels]}{[MediaInfo VideoDynamicRangeType]}{[Mediainfo VideoCodec]}{-Release Group}`
         * Add the /movies folder as a root folder

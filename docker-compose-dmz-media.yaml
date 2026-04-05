@@ -37,7 +37,7 @@ services:
       - ${DOWNLOAD_PATH}:/downloads
     networks:
       vpnnet-internal:
-        ipv4_address: 10.10.20.7
+        ipv4_address: 10.10.20.8
     dns:
       - 10.10.20.4  # bind DNS container
     post_start:  # This command runs after the container has started and routes the traffic via the VPN container
@@ -96,6 +96,8 @@ services:
     networks:
       vpnnet:
         ipv4_address: 10.10.10.7
+      vpnnet-internal:
+        ipv4_address: 10.10.20.7
     dns:
       - 10.10.20.4  # bind DNS container
   wireguard:
