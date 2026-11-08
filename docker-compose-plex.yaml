@@ -15,7 +15,7 @@ services:
       - "32400:32400"  # Direct access for LAN clients, remove if you only want access via swag
     volumes:
       - ./temp-data/plex-config:/config
-      - "${PLEX_MEDIA_PATH}:/data:ro"
+      - "${PLEX_MEDIA_PATH}:/data"
       - "${PLEX_TRANSCODE_PATH}:/transcode"
     devices:
       - "/dev/dri:/dev/dri"  # Intel Quick Sync hardware transcoding, remove if not available

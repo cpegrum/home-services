@@ -15,9 +15,9 @@ This setup contains 2 different containers:
 ### Setup
 * Copy the `.env.template` file in the root of the repo to `.env` and fill in:
     * `DOMAIN`: your domain, Plex will be served at `plex.<DOMAIN>`
-    * `PLEX_MEDIA_PATH`: where your media library is mounted (it is mounted read-only into the container as `/data`)
+    * `PLEX_MEDIA_PATH`: where your media library is mounted (it is mounted read-write into the container as `/data` so Plex can edit media, e.g. delete files or save posters/subtitles next to them)
     * `PLEX_TRANSCODE_PATH`: where Plex should write transcode files (use a local disk rather than a network share)
-    * (Optional) `PLEX_UID` / `PLEX_GID`: user/group Plex runs as, these must be able to read the media path. Defaults to `1000`.
+    * (Optional) `PLEX_UID` / `PLEX_GID`: user/group Plex runs as, these must be able to read and write the media path. Defaults to `1000`.
 
 * Make sure the `cloudflare.ini` file in `./secrets/reverse-proxy-secrets/` has the cloudflare API key to be able to get a SSL cert.
 
