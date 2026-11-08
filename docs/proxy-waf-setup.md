@@ -12,7 +12,7 @@ This setup uses the following containers:
 * `proxynet`: `10.10.40.0/24` -> Internet enabled network 
 
 ### Setup
-* Generate a random crowdsec API key using: `openssl rand -base64 24` Add this key to the `.env` file. (If this file doesn't exist in the root directory, copy the `.env.template` to `.env`)
+* Generate a random crowdsec API key using: `openssl rand -hex 24` Add this key to the `.env` file. (If this file doesn't exist in the root directory, copy the `.env.template` to `.env`)
 
 * Make sure the `DOMAIN` variable in the `.env` file is filled with your domain.
 
@@ -22,6 +22,8 @@ This setup uses the following containers:
     * `proxy-waf-open-webui.subdomain.conf`
     * `proxy-waf-plex.subdomain.conf`
 * For each of the above files, edit the `upstream_app` variable to point to the IP of your open webui and plex server.
+    * **This is required.** Both files ship with `<open webui IP here>` / `<plex IP here>` placeholders. If they are left as-is, nginx will fail to start and the SWAG container will not come up (check `docker logs swag`).
+    * If you only want one of the two services, remove the matching `./services/reverse-proxy/proxy-waf-*.subdomain.conf` volume line from `docker-compose-proxy-waf.yaml` instead of leaving the placeholder in place.
 
 * Start the containers: `docker compose -f docker-compose-proxy-waf.yaml up -d --build`
 

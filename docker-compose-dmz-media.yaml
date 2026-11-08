@@ -74,8 +74,6 @@ services:
     networks:
       vpnnet:
         ipv4_address: 10.10.10.7
-    dns:
-      - 10.10.20.4  # bind DNS container
   wireguard:
     image: linuxserver/wireguard:1.0.20260223
     container_name: wireguard

@@ -4,8 +4,10 @@ services:
     container_name: akaunting
     restart: unless-stopped
     depends_on:
-      - mariadb
-      - swag
+      mariadb:
+        condition: service_healthy
+      swag:
+        condition: service_started
     env_file:
       - ./secrets/bookkeeping-secrets/run.env
     volumes:
@@ -23,6 +25,12 @@ services:
     volumes:
       - akaunting-db:/var/lib/mysql
       - ./services/bookkeeping-services/maria.cnf:/etc/mysql/conf.d/maria.cnf:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       akauntingnet:
         ipv4_address: 10.10.50.3

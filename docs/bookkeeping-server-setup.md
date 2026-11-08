@@ -7,7 +7,7 @@ Akaunting server
 ### Containers
 This setup contains 3 different containers:
 * akaunting: This container hosts the akaunting bookkeeping/accounting software. It is connected to the `akauntingnet`
-* mariadb: This container hosts the mariadb used by the akaunting software. It is connected to the `akauntingnet`
+* mariadb: This container hosts the mariadb used by the akaunting software. It is connected to the `akauntingnet`. Akaunting waits for its healthcheck to pass before starting, so the first start can take a minute.
 * swag: This reverse proxy provides SSL certs for the akaunting frontend. It is connected to the `akauntingnet` network with ports `80` and `443` exposed to allow external use.
 
 ### Networks
@@ -16,7 +16,7 @@ This setup contains 3 different containers:
 ### Setup
 
 * Copy the `db.env.template` and the `run.env.template` from the `secrets/bookkeeping-secrets` directory and rename without the `.template` ending: `db.env` and `run.env`.
-* In `db.env` change the `MYSQL_PASSWORD` to a random string:  `openssl rand -base64 24`
+* In `db.env` change the `MYSQL_PASSWORD` to a random string:  `openssl rand -hex 24`
 * Copy this password to `run.env` and place it in `DB_PASSWORD`.
 * In `run.env` also set the following variables:
     * `APP_URL`: Set to domain you will be accessing Akaunting with. ex: `akaunting.me.ca`
@@ -24,7 +24,7 @@ This setup contains 3 different containers:
     * `COMPANY_NAME`: First company that will be used for Akaunting
     * `COMPANY_EMAIL`: Email for the company (can be fake won't be send anything)
     * `ADMIN_EMAIL`: Email which will be used as username for default admin
-    * `ADMIN_PASSWORD`: Password for default admin, set to something strong: `openssl rand -base64 24`
+    * `ADMIN_PASSWORD`: Password for default admin, set to something strong: `openssl rand -hex 24`
 * For the swag container, do the following:
     * Make sure the `DOMAIN` variable in the `.env` file is filled with your domain.
 
