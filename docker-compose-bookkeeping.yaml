@@ -1,6 +1,6 @@
 services:
   akaunting:
-    image: akaunting/akaunting:latest
+    image: akaunting/akaunting:3.3.0
     container_name: akaunting
     restart: unless-stopped
     depends_on:
@@ -15,19 +15,19 @@ services:
       akauntingnet:
         ipv4_address: 10.10.50.2
   mariadb:
-    image: mariadb:latest
+    image: mariadb:13.0.2
     container_name: maraidb
     restart: unless-stopped
     env_file:
       - ./secrets/bookkeeping-secrets/db.env
     volumes:
       - akaunting-db:/var/lib/mysql
-      - ./services/bookkeeping-secrets/maria.cnf:/etc/mysql/conf.d/maria.cnf:ro
+      - ./services/bookkeeping-services/maria.cnf:/etc/mysql/conf.d/maria.cnf:ro
     networks:
       akauntingnet:
         ipv4_address: 10.10.50.3
   swag:
-    image: linuxserver/swag:latest
+    image: linuxserver/swag:5.9.0
     container_name: swag
     restart: unless-stopped
     security_opt:
@@ -41,7 +41,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
      - source: cloudfare_config

@@ -1,6 +1,6 @@
 services:
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.15
     container_name: ollama
     restart: unless-stopped
     environment:
@@ -35,7 +35,7 @@ services:
       ainet:
         ipv4_address: 10.10.30.3
   swag:
-    image: linuxserver/swag:latest
+    image: linuxserver/swag:5.9.0
     container_name: swag
     restart: unless-stopped
     security_opt:
