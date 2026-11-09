@@ -36,5 +36,5 @@ This setup contains 2 different containers:
 `docker-compose-proxy-waf.yaml` can also front Plex. If you want to use it in front of this setup, you can't run both on the same host as both publish ports `80`/`443`. On the WAF host, set `upstream_app` in `proxy-waf-plex.subdomain.conf` to the IP of this server (port `443`, https), and keep this setup's SWAG as the backend.
 
 ### Notes
-* `temp-data/plex-config` holds the Plex database and metadata, back it up.
+* `temp-data/plex-config` holds the Plex database and metadata, back it up with `scripts/plex-backup.sh`, see [Plex Backups](./plex-backup.md).
 * Port `32400` is published directly for LAN clients. Remove that port mapping if you want Plex only reachable via SWAG.
