@@ -4,6 +4,7 @@ This Repo contains my home server docker setup and currently has the following s
 * Usenet Downloader via Sabnzbd with Sonarr with SWAG reverse proxy
 * Tdarr setup for trancoding via CPU with SWAG reverse proxy
 * Ollama and Open WebUI AI server with SWAG reverse proxy
+* Plex media server with SWAG reverse proxy
 * Crowdsec + Swag reverse proxy
 
 
@@ -29,6 +30,14 @@ This setup is done via the `docker-compose-dmz-ai.yaml` file located in the root
 * Ollama: This container hosts and runs the AI models.
 * Open-Webui: This container hosts the Web frontend that allows for easy use of the AI models run by Ollama.
 * swag: This reverse proxy provides SSL certs for the Open-Webui frontend.
+
+### Plex
+This setup is done via the `docker-compose-plex.yaml` file located in the root of this repo. It contains the following containers:
+
+* Plex: Plex Media Server (with optional Intel hardware transcoding via `/dev/dri`).
+* SWAG: reverse proxy which provides TLS for Plex via `plex.<your domain>`.
+
+To see more information on how to set this up check out the documentation [here](./docs/plex-setup.md)
 
 ### Crowdsec + Swag
 This setup is done via the `docker-compose-proxy-waf.yaml` file located in the root of this repo. it container the following containers:
