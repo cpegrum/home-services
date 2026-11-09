@@ -1,6 +1,6 @@
 services:
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: linuxserver/sonarr:4.0.20
     container_name: sonarr
     restart: unless-stopped
     depends_on: 
@@ -8,7 +8,7 @@ services:
       - "wireguard"
     environment:
       PUID: 1000
-      GUID: 1000
+      PGID: 1000
       TZ: Etc/UTC
     volumes:
       - ./temp-data/sonarr-config:/config
@@ -24,7 +24,7 @@ services:
         user: root
         privileged: true
   sabnzbd:
-    image: linuxserver/sabnzbd:latest
+    image: linuxserver/sabnzbd:5.1.3
     container_name: sabnzbd
     restart: unless-stopped
     depends_on:
@@ -48,7 +48,7 @@ services:
         user: root
         privileged: true
   tdarr:
-    image: haveagitgat/tdarr:2.47.01
+    image: haveagitgat/tdarr:3.06.00
     container_name: tdarr
     restart: unless-stopped
     depends_on:
@@ -74,10 +74,8 @@ services:
     networks:
       vpnnet:
         ipv4_address: 10.10.10.7
-    dns:
-      - 10.10.20.4  # bind DNS container
   wireguard:
-    image: linuxserver/wireguard:latest
+    image: linuxserver/wireguard:1.0.20260223
     container_name: wireguard
     restart: unless-stopped
     cap_add:
@@ -97,7 +95,7 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
   swag:
-    image: linuxserver/swag:latest
+    image: linuxserver/swag:5.9.0
     container_name: swag
     restart: unless-stopped
     security_opt:
@@ -111,7 +109,7 @@ services:
       SUBDOMAINS: wildcard
       ONLY_SUBDOMAINS: true
       DISABLE_F2B: true
-      STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
+      #STAGING: true  # Set this if you want to use lets encrypt staging (testing) certs
       DNSPLUGIN: cloudflare
     secrets:
      - source: cloudfare_config

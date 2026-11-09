@@ -24,7 +24,7 @@ First make sure you Ubuntu machine is setup to allow AI models to run. See [VM s
     * Download the `gemma3:27b` model: `ollama pull gemma3:27b`
     * Download the `llama3.3:70b` model: `ollama pull llama3.3:70b`
 
-* Go to the domain for the open-webui: `https://api.<your domain>`
+* Go to the domain for the open-webui: `https://ai.<your domain>`
 * Create the admin user by entering in a new password and email
 
 * Once logged in, time to start configuring the UI.
