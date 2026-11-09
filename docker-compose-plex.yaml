@@ -1,8 +1,11 @@
+name: plex
 services:
   plex:
     image: plexinc/pms-docker:1.43.5.11079-b3b13e506
     container_name: plex
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     environment:
       TZ: "America/Toronto"
       ADVERTISE_IP: "https://plex.${DOMAIN}:443"
@@ -24,7 +27,7 @@ services:
         ipv4_address: 10.10.60.2
   swag:
     image: linuxserver/swag:5.9.0
-    container_name: swag
+    container_name: swag-plex
     restart: unless-stopped
     depends_on:
       - plex

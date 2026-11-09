@@ -1,10 +1,13 @@
+name: dmz-ai
 services:
   ollama:
     image: ollama/ollama:0.40.15
     container_name: ollama
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     environment:
-      OLLAMA_KEEP_ALIVE: 7200  # Keep each model in memory for 1 hour after use before unload
+      OLLAMA_KEEP_ALIVE: 7200  # Keep each model in memory for 2 hours (7200s) after use before unload
       OLLAMA_CONTEXT_LENGTH: 16384  # Context length at 16k
       OLLAMA_FLASH_ATTENTION: 1
       OLLAMA_KV_CACHE_TYPE: q8_0
@@ -24,6 +27,8 @@ services:
     image: ghcr.io/open-webui/open-webui:0.13.2
     container_name: open-webui
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     depends_on:
       - ollama
     environment:
@@ -36,7 +41,7 @@ services:
         ipv4_address: 10.10.30.3
   swag:
     image: linuxserver/swag:5.9.0
-    container_name: swag
+    container_name: swag-ai
     restart: unless-stopped
     security_opt:
       - no-new-privileges=true

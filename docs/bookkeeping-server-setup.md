@@ -19,7 +19,7 @@ This setup contains 3 different containers:
 * In `db.env` change the `MYSQL_PASSWORD` to a random string:  `openssl rand -hex 24`
 * Copy this password to `run.env` and place it in `DB_PASSWORD`.
 * In `run.env` also set the following variables:
-    * `APP_URL`: Set to domain you will be accessing Akaunting with. ex: `akaunting.me.ca`
+    * `APP_URL`: Set to the URL you will be accessing Akaunting with, including `https://`. ex: `https://akaunting.me.ca`
     * `DB_PREFIX`: Set to a unique string of 3 letters followed by a underscore: ex: `akt_`
     * `COMPANY_NAME`: First company that will be used for Akaunting
     * `COMPANY_EMAIL`: Email for the company (can be fake won't be send anything)
@@ -28,7 +28,7 @@ This setup contains 3 different containers:
 * For the swag container, do the following:
     * Make sure the `DOMAIN` variable in the `.env` file is filled with your domain.
 
-    * Make sure the `cloudflare.ini` file in `./secrets/` has the cloudflare API key to be able to get a SSL cert
+    * Make sure the `cloudflare.ini` file in `./secrets/reverse-proxy-secrets/` has the cloudflare API key to be able to get a SSL cert
 * When starting the server fresh for the first time, make sure to set the `AKAUNTING_SETUP=true` env variable. This should only be set for the first run and does not need to be set for it afterwards!
 * Start the docker containers: `AKAUNTING_SETUP=true docker compose -f docker-compose-bookkeeping.yaml up -d --build`
 * Head to your domain in your browser and do the initial setup
@@ -41,16 +41,22 @@ This setup contains 3 different containers:
 
 
 ### Backing up
-The Akaunting setup and be backed up by backing up the two docker volumes: `akaunting-data` and `akaunting-db`
+The Akaunting setup can be backed up by backing up the two docker volumes: `home-services_akaunting-data` and `home-services_akaunting-db`.
+
+The backups contain the whole accounting database and the Akaunting `.env` (app key and DB password), so store them **outside this repo** and somewhere private. The commands below write to `~/backups`:
+
+```bash
+mkdir -p ~/backups && chmod 700 ~/backups
+```
 
 * This command will generate a tarred file backup of the `akaunting-data` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-data:/backup -v $(pwd):/host alpine:latest tar -C /backup -czf /host/akaunting-data-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
+docker run -it --rm -v home-services_akaunting-data:/backup -v ~/backups:/host alpine:latest tar -C /backup -czf /host/akaunting-data-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
 
 * This command will generate a tarred file backup of the `akaunting-db` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-db:/backup -v $(pwd):/host alpine:latest tar -C /backup -czf /host/akaunting-db-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
+docker run -it --rm -v home-services_akaunting-db:/backup -v ~/backups:/host alpine:latest tar -C /backup -czf /host/akaunting-db-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
 
 ### Restoring
@@ -58,10 +64,10 @@ Assuming backups were created using the above method shown in [Backing up](#back
 
 * For `akaunting-data` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-data:/backup -v $(pwd):/host alpine:latest tar -xzf /host/akaunting-data-backup-<timestamp>.tar.gz -C /backup
+docker run -it --rm -v home-services_akaunting-data:/backup -v ~/backups:/host alpine:latest tar -xzf /host/akaunting-data-backup-<timestamp>.tar.gz -C /backup
 ```
 
 * For the `akaunting-db` volume:
 ```bash
-docker run -it --rm -v home-services_akaunting-db:/backup -v $(pwd):/host alpine:latest tar -xzf /host/akaunting-db-backup-<timestamp>.tar.gz -C /backup
+docker run -it --rm -v home-services_akaunting-db:/backup -v ~/backups:/host alpine:latest tar -xzf /host/akaunting-db-backup-<timestamp>.tar.gz -C /backup
 ```

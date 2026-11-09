@@ -1,7 +1,8 @@
+name: proxy-waf
 services:
   swag:
     image: linuxserver/swag:5.9.0
-    container_name: swag
+    container_name: swag-waf
     restart: unless-stopped
     security_opt:
       - no-new-privileges=true
@@ -55,9 +56,11 @@ services:
       volumes:
         - ./temp-data/crowdsec-config:/var/lib/crowdsec/data:rw
         - logs:/var/log/swag:ro
+        - crowdsec-config:/etc/crowdsec  # persists machine credentials and console enrolment
         - ./services/proxy-services/crowdsec/acquis.d:/etc/crowdsec/acquis.d
 volumes:
   logs:
+  crowdsec-config:
 secrets:
   cloudfare_config:
     file: ./secrets/reverse-proxy-secrets/cloudflare.ini

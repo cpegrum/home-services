@@ -1,8 +1,13 @@
+name: dmz-media
 services:
   sonarr:
     image: linuxserver/sonarr:4.0.20
     container_name: sonarr
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    cap_add:
+      - NET_ADMIN  # needed by the route-via-vpn init script
     depends_on: 
       - "sabnzbd"
       - "wireguard"
@@ -12,6 +17,7 @@ services:
       TZ: Etc/UTC
     volumes:
       - ./temp-data/sonarr-config:/config
+      - ./services/dmz-services/media/custom-scripts/route-via-vpn.sh:/custom-cont-init.d/10-route-via-vpn.sh:ro
       - "${TV_SHOW_PATH}:/tv"
       - ${DOWNLOAD_PATH}:/downloads
     networks:
@@ -19,14 +25,14 @@ services:
         ipv4_address: 10.10.20.6
     dns:
       - 10.10.20.4  # bind DNS container
-    post_start:  # This command runs after the container has started and routes the traffic via the VPN container
-      - command: /bin/sh -c "ip route add default via 10.10.20.2"
-        user: root
-        privileged: true
   sabnzbd:
     image: linuxserver/sabnzbd:5.1.3
     container_name: sabnzbd
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    cap_add:
+      - NET_ADMIN  # needed by the route-via-vpn init script
     depends_on:
       - "wireguard"
     environment:
@@ -35,22 +41,21 @@ services:
       TZ: Etc/UTC
     volumes:
       - ./temp-data/sabnzbd-config:/config
+      - ./services/dmz-services/media/custom-scripts/route-via-vpn.sh:/custom-cont-init.d/10-route-via-vpn.sh:ro
       - ${DOWNLOAD_PATH}:/downloads
       - ${TEMP_DOWNLOAD_PATH}:/incomplete-downloads
-      - ${NZB_WATCH_PATH}:/watch-folder
+      - ${NZB_WATCH_PATH:-./temp-data/sabnzbd-nzb-watch}:/watch-folder
     networks:
       vpnnet-internal:
         ipv4_address: 10.10.20.3
     dns:
       - 10.10.20.4  # bind DNS container
-    post_start:  # This command runs after the container has started and routes the traffic via the VPN container
-      - command: /bin/sh -c "ip route add default via 10.10.20.2"
-        user: root
-        privileged: true
   tdarr:
     image: haveagitgat/tdarr:3.06.00
     container_name: tdarr
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     depends_on:
       - wireguard
     cpus: 2
@@ -78,6 +83,8 @@ services:
     image: linuxserver/wireguard:1.0.20260223
     container_name: wireguard
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -96,7 +103,7 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
   swag:
     image: linuxserver/swag:5.9.0
-    container_name: swag
+    container_name: swag-media
     restart: unless-stopped
     security_opt:
       - no-new-privileges=true
@@ -131,6 +138,8 @@ services:
     image: internetsystemsconsortium/bind9:9.20
     container_name: dns
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     cap_add:
       - NET_ADMIN
     volumes:

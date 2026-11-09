@@ -9,6 +9,12 @@ This Repo contains my home server docker setup and currently has the following s
 
 
 ## General Setup
+Each `docker-compose-*.yaml` file is its own stack with its own project name (`bookkeeping`, `dmz-ai`, `dmz-media`, `plex`, `proxy-waf`), so always pass the file: `docker compose -f docker-compose-<stack>.yaml up -d`.
+
+Every stack has its own SWAG container (`swag-<stack>`) that publishes ports `80` and `443`, so **only run one stack per host** (or merge the proxy confs into a single SWAG).
+
+> **Upgrading from before stacks had their own project names:** the stacks used to all share the `home-services` project. Before starting a stack with the new files, stop the old containers with `docker compose -p home-services -f docker-compose-<stack>.yaml down` (do **not** add `-v`). Data in `./temp-data` and the Akaunting volumes (`home-services_akaunting-*`, whose names are pinned) is kept.
+
 Copy the `.env.template` file in the root of the repo and fill in the environment variables for
 the location of your mounted share for media to be placed on. As well, include the URL of the domain that SWAG should serve.
 

@@ -16,24 +16,24 @@ This setup uses the following containers:
 
 * Make sure the `DOMAIN` variable in the `.env` file is filled with your domain.
 
-* Make sure the `cloudflare.ini` file in `./secrets/` has the cloudflare API key to be able to get a SSL cert
+* Make sure the `cloudflare.ini` file in `./secrets/reverse-proxy-secrets/` has the cloudflare API key to be able to get a SSL cert
 
 * Edit the reverse-proxy confs in `./services/reverse-proxy` for:
     * `proxy-waf-open-webui.subdomain.conf`
     * `proxy-waf-plex.subdomain.conf`
 * For each of the above files, edit every `upstream_app` line (the plex conf has two, one in each `location` block) to point to the IP of your open webui and plex server.
-    * **This is required.** Both files ship with `<open webui IP here>` / `<plex IP here>` placeholders. If they are left as-is, nginx will fail to start and the SWAG container will not come up (check `docker logs swag`).
+    * **This is required.** Both files ship with `<open webui IP here>` / `<plex IP here>` placeholders. If they are left as-is, nginx will fail to start and the SWAG container will not come up (check `docker logs swag-waf`).
     * If you only want one of the two services, remove the matching `./services/reverse-proxy/proxy-waf-*.subdomain.conf` volume line from `docker-compose-proxy-waf.yaml` instead of leaving the placeholder in place.
 
 * Start the containers: `docker compose -f docker-compose-proxy-waf.yaml up -d --build`
 
 ### Testing
 Testing works best when run from another computer (not the same one it is deployed on)
-* You can test your setup by going to: `https://<your domain>/.env` you should get a crowdsec blocked msg
+* You can test your setup by going to: `https://plex.<your domain>/.env` (use one of your proxied subdomains, the cert does not cover the bare domain) you should get a crowdsec blocked msg
 
 * You can verify that the block worked by entering the container via: `docker exec -it crowdsec bash` then going to `cscli metrics show appsec`
 
-* To test a ban, go to the following URL on your instance: `https://<your domain>/CLASS.MODULE.CLASSLOADER.`, you may have to go more then once to trigger the ban
+* To test a ban, go to the following URL on your instance: `https://plex.<your domain>/CLASS.MODULE.CLASSLOADER.`, you may have to go more then once to trigger the ban
 * You should now see a blocked page, enter the container to check the blocked status:
     * `docker exec -it crowdsec bash` then `cscli decisions list`, you should now see a blocked decision.
     * Use the following command to unblock it: `cscli decisions delete --id <ID number from list cmd>`
