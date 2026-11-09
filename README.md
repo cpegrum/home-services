@@ -43,7 +43,7 @@ This setup is done via the `docker-compose-plex.yaml` file located in the root o
 * Plex: Plex Media Server (with optional Intel hardware transcoding via `/dev/dri`).
 * SWAG: reverse proxy which provides TLS for Plex via `plex.<your domain>`.
 
-To see more information on how to set this up check out the documentation [here](./docs/plex-setup.md)
+To see more information on how to set this up check out the documentation [here](./docs/plex-setup.md). Encrypted backups are covered [here](./docs/plex-backup.md).
 
 ### Crowdsec + Swag
 This setup is done via the `docker-compose-proxy-waf.yaml` file located in the root of this repo. it container the following containers:
