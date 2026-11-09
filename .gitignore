@@ -1,5 +1,20 @@
 # Ignore all the device specific temp-data, which might include secrets!
 temp-data/*
-secrets/*
-.env
+
+# Secrets: ignore everything under secrets/ except the *.template files (in any subfolder)
+secrets/**
+!secrets/**/
 !secrets/**/*.template
+
+# Local env files (keep the template)
+.env
+.env.*
+!.env.template
+
+# Local compose overrides
+docker-compose.override.yaml
+docker-compose.override.yml
+
+# Backups (may contain databases and secrets), keep them outside the repo
+*.tar.gz
+*.tgz

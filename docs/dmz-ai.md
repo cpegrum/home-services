@@ -16,7 +16,7 @@ This setup contains 3 different containers:
 ### Setup
 First make sure you Ubuntu machine is setup to allow AI models to run. See [VM setup](./dmz-ai-server-setup.md) for more details.
 
-* Make sure the `.env` file and the `secrets/cloudflare.ini` file are filled in with the web domain and cloudflare key in order for SWAG to be able to generate the SSL certificates.
+* Make sure the `.env` file and the `secrets/reverse-proxy-secrets/cloudflare.ini` file are filled in with the web domain and cloudflare key in order for SWAG to be able to generate the SSL certificates.
 
 * Next Start the containers using: `docker compose -f docker-compose-dmz-ai.yaml up -d --build`
 * Once the containers are up, enter the `ollama` container to download and install some models

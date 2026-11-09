@@ -56,9 +56,9 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
 
     ```
     [Interface]
-    # Device: Liked Shark
+    # Device: <device name>
     PrivateKey = <key>
-    Address = 10.64.55.244/32
+    Address = <tunnel address>/32
     DNS = 104.242.2.3
     PostUp = iptables -t nat -A POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
     PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
@@ -75,9 +75,9 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
 
 * start the docker containers
 
-`docker compose up -f docker-compose-dmz-media.yaml -d --build`
+`docker compose -f docker-compose-dmz-media.yaml up -d`
 
-* enter ./usenet-setup/sabnzbd-config/ and edit the  sabnzbd.ini file with the following
+* enter ./temp-data/sabnzbd-config/ and edit the  sabnzbd.ini file with the following
 
     ```
     host_whitelist = sabnzbd.<your domain>,sabnzbd # Comma seperate different entries
@@ -85,7 +85,7 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
 
 * restart containers with docker compose
 
-* check logs and swag-config/keys to make sure a certificate was generated
+* check the logs (`docker logs swag-media`) and ./temp-data/swag-config/keys to make sure a certificate was generated
 
 * Sabnzbd Setup
 
@@ -147,7 +147,7 @@ PreDown = iptables -t nat -D POSTROUTING -o ca-mtr-wg-001 -j MASQUERADE
     * Go to Series and wait for it to detect any missing shows etc
     * For those with missing episodes, you can ask it to go grab them via Sabnzbd using the question mark button
 * Tdarr setup
-    * Go to `Tdarr.<your domains>.ca`
+    * Go to `https://tdarr.<your domain>`
     * Go to Flow -> Add Flow
     * Add the following flow: [tdarr flow](./tdarr/tdarr-flow.json)
     * Go to Libraries Add a new one called "TV"

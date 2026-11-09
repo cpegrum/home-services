@@ -1,3 +1,4 @@
+name: bookkeeping
 services:
   akaunting:
     image: akaunting/akaunting:3.3.0
@@ -8,8 +9,12 @@ services:
         condition: service_healthy
       swag:
         condition: service_started
+    security_opt:
+      - no-new-privileges=true
     env_file:
       - ./secrets/bookkeeping-secrets/run.env
+    environment:
+      AKAUNTING_SETUP: ${AKAUNTING_SETUP:-false}  # set to true for the first start only, see docs
     volumes:
       - akaunting-data:/var/www/html
       - ./services/bookkeeping-services/php.ini:/usr/local/etc/php/php.ini:ro
@@ -18,8 +23,10 @@ services:
         ipv4_address: 10.10.50.2
   mariadb:
     image: mariadb:13.0.2
-    container_name: maraidb
+    container_name: mariadb
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
     env_file:
       - ./secrets/bookkeeping-secrets/db.env
     volumes:
@@ -36,7 +43,7 @@ services:
         ipv4_address: 10.10.50.3
   swag:
     image: linuxserver/swag:5.9.0
-    container_name: swag
+    container_name: swag-bookkeeping
     restart: unless-stopped
     security_opt:
       - no-new-privileges=true
@@ -67,8 +74,11 @@ secrets:
   cloudfare_config:
     file: ./secrets/reverse-proxy-secrets/cloudflare.ini
 volumes:
+  # Names are pinned so the existing volumes keep being used (they were created under the old default project name)
   akaunting-data:
+    name: home-services_akaunting-data
   akaunting-db:
+    name: home-services_akaunting-db
 networks:
   akauntingnet:
     name: akauntingnet

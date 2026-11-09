@@ -28,7 +28,7 @@ This setup contains 2 different containers:
     * The token is only needed the first time. For restarts use: `docker compose -f docker-compose-plex.yaml up -d`
     * Don't commit the claim token anywhere.
 
-* Check the SWAG logs (`docker logs swag`) to make sure a certificate was generated.
+* Check the SWAG logs (`docker logs swag-plex`) to make sure a certificate was generated.
 
 * In the Plex web UI go to Settings -> Network and fill in "Custom server access URLs" with `https://plex.<your domain>:443`. The container also sets `ADVERTISE_IP` to this.
 
