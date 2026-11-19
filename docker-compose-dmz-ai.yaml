@@ -1,7 +1,7 @@
 name: dmz-ai
 services:
   ollama:
-    image: ollama/ollama:0.40.15
+    image: ollama/ollama:0.40.16
     container_name: ollama
     restart: unless-stopped
     security_opt:
@@ -24,7 +24,7 @@ services:
       ainet:
         ipv4_address: 10.10.30.2
   open-webui:
-    image: ghcr.io/open-webui/open-webui:0.13.2
+    image: ghcr.io/open-webui/open-webui:0.13.4
     container_name: open-webui
     restart: unless-stopped
     security_opt:
@@ -40,7 +40,7 @@ services:
       ainet:
         ipv4_address: 10.10.30.3
   swag:
-    image: linuxserver/swag:5.9.0
+    image: linuxserver/swag:5.10.0
     container_name: swag-ai
     restart: unless-stopped
     security_opt:

@@ -51,7 +51,7 @@ services:
     dns:
       - 10.10.20.4  # bind DNS container
   tdarr:
-    image: haveagitgat/tdarr:3.06.00
+    image: haveagitgat/tdarr:3.08.00
     container_name: tdarr
     restart: unless-stopped
     security_opt:
@@ -102,7 +102,7 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
   swag:
-    image: linuxserver/swag:5.9.0
+    image: linuxserver/swag:5.10.0
     container_name: swag-media
     restart: unless-stopped
     security_opt:
