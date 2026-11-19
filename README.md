@@ -23,10 +23,11 @@ This setup is done via the `docker-compose-dmz-media.yaml` file located in the r
 
 * Sabnzbd: Media Downloader from Usenet
 * Sonarr: TV Show organizer and will download missing edpisodes via Sabnzbd
-* SWAG: reverse proxy which will allow access to the Sonarr and Sanbzbd web UIs via `sonarr.<your domain>` and `sabnzbd.<your domain>` subdomains.
+* Radarr: Movie organizer and will download missing movies via Sabnzbd
+* SWAG: reverse proxy which will allow access to the Sonarr, Radarr, Sabnzbd and Tdarr web UIs via `sonarr.<your domain>`, `radarr.<your domain>`, `sabnzbd.<your domain>` and `tdarr.<your domain>` subdomains.
 * Tdarr: Transcode Media with CPU
 * wireguard: VPN to forward all traffic coming from Sonarr and Sabnzbd
-* bind9: povides DNS for Sabnzbd and Sonarr containers.
+* bind9: provides DNS for the Sabnzbd, Sonarr and Radarr containers.
 
 To see more information on how to set this up check out the documentation [here](./docs/dmz-media-downloader.md)
 
