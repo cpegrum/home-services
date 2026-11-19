@@ -1,7 +1,7 @@
 name: proxy-waf
 services:
   swag:
-    image: linuxserver/swag:5.9.0
+    image: linuxserver/swag:5.10.0
     container_name: swag-waf
     restart: unless-stopped
     security_opt:

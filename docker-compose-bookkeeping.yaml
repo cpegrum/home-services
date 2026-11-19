@@ -1,7 +1,7 @@
 name: bookkeeping
 services:
   akaunting:
-    image: akaunting/akaunting:3.3.0
+    image: akaunting/akaunting:3.3.1
     container_name: akaunting
     restart: unless-stopped
     depends_on:
@@ -42,7 +42,7 @@ services:
       akauntingnet:
         ipv4_address: 10.10.50.3
   swag:
-    image: linuxserver/swag:5.9.0
+    image: linuxserver/swag:5.10.0
     container_name: swag-bookkeeping
     restart: unless-stopped
     security_opt:
