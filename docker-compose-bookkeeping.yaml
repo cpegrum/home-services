@@ -1,7 +1,7 @@
 name: bookkeeping
 services:
   akaunting:
-    image: akaunting/akaunting:3.3.1
+    image: akaunting/akaunting:3.3.2
     container_name: akaunting
     restart: unless-stopped
     depends_on:
