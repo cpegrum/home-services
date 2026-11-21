@@ -33,14 +33,9 @@ Usenet based downloader with the following containers:
 
 * On the SMB share side, disabling SMB oplock can be helpful if you notice issues turning on and off the sonarr container (ex: it hangs)
 
-* pull the required containers:
+* pull the container images. The versions are pinned in `docker-compose-dmz-media.yaml`, so update them there:
 
-  * linuxserver:swag:latest
-  * linuxserver/wireguard:latest
-  * linuxserver/sabnzbd:latest
-  * linuxserver/sonarr:latest
-  * linuxserver/radarr:latest
-  * internetsystemsconsortium/bind9:9.20
+`docker compose -f docker-compose-dmz-media.yaml pull`
 
 * go to mullvad and download a wireguard config: https://mullvad.net/en/account/wireguard-config
 
