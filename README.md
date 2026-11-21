@@ -46,6 +46,15 @@ This setup is done via the `docker-compose-plex.yaml` file located in the root o
 
 To see more information on how to set this up check out the documentation [here](./docs/plex-setup.md). Encrypted backups are covered [here](./docs/plex-backup.md).
 
+### Bookkeeping (Akaunting)
+This setup is done via the `docker-compose-bookkeeping.yaml` file located in the root of this repo. It contains the following containers:
+
+* Akaunting: Self-hosted bookkeeping/accounting software.
+* MariaDB: Database used by Akaunting.
+* SWAG: reverse proxy which provides TLS for Akaunting via `akaunting.<your domain>`.
+
+To see more information on how to set this up check out the documentation [here](./docs/bookkeeping-server-setup.md). Encrypted backups are covered [here](./docs/akaunting-backup.md).
+
 ### Crowdsec + Swag
 This setup is done via the `docker-compose-proxy-waf.yaml` file located in the root of this repo. it container the following containers:
 

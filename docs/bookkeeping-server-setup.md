@@ -41,33 +41,24 @@ This setup contains 3 different containers:
 
 
 ### Backing up
-The Akaunting setup can be backed up by backing up the two docker volumes: `home-services_akaunting-data` and `home-services_akaunting-db`.
+Use `scripts/akaunting-backup.sh` to make encrypted backups (database dump, app files and secrets) to an SMB share or other folder, and to restore them. See [Akaunting Backups](./akaunting-backup.md).
 
-The backups contain the whole accounting database and the Akaunting `.env` (app key and DB password), so store them **outside this repo** and somewhere private. The commands below write to `~/backups`:
+For a quick one-off copy of the two volumes, e.g. before an update, these commands write to `~/backups`. The backups contain the whole accounting database and the Akaunting `.env` (app key and DB password), so keep them **outside this repo** and somewhere private. Stop Akaunting and MariaDB first (`docker compose -f docker-compose-bookkeeping.yaml stop akaunting mariadb`) so the database files are consistent, and start them again afterwards.
 
 ```bash
 mkdir -p ~/backups && chmod 700 ~/backups
 ```
-
-* This command will generate a tarred file backup of the `akaunting-data` volume:
 ```bash
 docker run -it --rm -v home-services_akaunting-data:/backup -v ~/backups:/host alpine:latest tar -C /backup -czf /host/akaunting-data-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
-
-* This command will generate a tarred file backup of the `akaunting-db` volume:
 ```bash
 docker run -it --rm -v home-services_akaunting-db:/backup -v ~/backups:/host alpine:latest tar -C /backup -czf /host/akaunting-db-backup-$(date +"%Y-%m-%d-%H%M").tar.gz .
 ```
 
-### Restoring
-Assuming backups were created using the above method shown in [Backing up](#backing-up), they can be restored using:
-
-* For `akaunting-data` volume:
+To restore these one-off copies (with both containers stopped):
 ```bash
 docker run -it --rm -v home-services_akaunting-data:/backup -v ~/backups:/host alpine:latest tar -xzf /host/akaunting-data-backup-<timestamp>.tar.gz -C /backup
 ```
-
-* For the `akaunting-db` volume:
 ```bash
 docker run -it --rm -v home-services_akaunting-db:/backup -v ~/backups:/host alpine:latest tar -xzf /host/akaunting-db-backup-<timestamp>.tar.gz -C /backup
 ```
